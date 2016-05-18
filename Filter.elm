@@ -3,6 +3,8 @@ module Filter exposing (..)
 import Html
 import Html.App as Html
 import Html.Attributes as Html
+import Html.Events as Html
+import Regex
 
 
 main : Program Flags
@@ -16,35 +18,50 @@ main =
 
 
 type alias Flags =
-    List SectionInfo
+    List Section
 
 
-type alias SectionInfo =
-    { id : String, text : String }
+type alias Filter =
+    Maybe String
+
+
+type alias Section =
+    { id : String, text : String, content : String }
 
 
 type alias Model =
     { message : String
     , sections : Flags
+    , filter : Filter
     }
 
 
 type Msg
-    = NoOp
+    = UpdateFilter String
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
-    ( { message = "Hello", sections = flags }, Cmd.none )
+    ( { message = "Hello", sections = flags, filter = Nothing }, Cmd.none )
 
 
 update msg model =
-    ( model, Cmd.none )
+    case msg |> Debug.log "msg" of
+        UpdateFilter filterString ->
+            let
+                filter =
+                    if filterString == "" then
+                        Nothing
+                    else
+                        Just filterString
+            in
+                { model | filter = filter } ! []
 
 
 view model =
     Html.div []
-        [ sectionList model
+        [ filterInput model
+        , sectionList model
         ]
 
 
@@ -56,4 +73,31 @@ sectionList model =
         sectionListItem section =
             Html.li [] [ link section.id section.text ]
     in
-        Html.ul [ Html.class "section-list" ] (List.map sectionListItem model.sections)
+        Html.ul [ Html.class "section-list" ]
+            (filterSections model.filter model.sections
+                |> List.map sectionListItem
+            )
+
+
+filterSections : Filter -> List Section -> List Section
+filterSections filter sections =
+    let
+        matches section =
+            case filter of
+                Just pattern ->
+                    let
+                        regex =
+                            Regex.regex pattern |> Regex.caseInsensitive
+                    in
+                        (Regex.contains regex section.text
+                            || Regex.contains regex section.content
+                        )
+
+                Nothing ->
+                    True
+    in
+        List.filter matches sections
+
+
+filterInput model =
+    Html.input [ Html.onInput UpdateFilter, Html.class "filter" ] []
