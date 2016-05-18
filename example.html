@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <link rel="canonical" href="/elm-faq/17.html">
+</head>
+
+
+  <body>
+
+
+<div id="elm-content"></div>
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Elm 0.17</h1>
+  </header>
+
+  <article class="post-content">
+    <p>This page concerns questions that arose with Elm version 0.17.</p>
+
+<p>For general questions see the <a href="index.html">main FAQ page</a>.</p>
+
+<h3 id="where-are-the-official-documents-about-elm-version-017">Where are the official documents about Elm version 0.17?</h3>
+
+<ul>
+  <li><a href="http://elm-lang.org/blog/farewell-to-frp">A Farewell to FRP</a>: Evan’s blog announcement of Elm 0.17.</li>
+  <li><a href="https://github.com/elm-lang/elm-platform/blob/master/upgrade-docs/0.17.md">Upgrading to 0.17</a>: The official upgrade guide.</li>
+  <li><a href="http://guide.elm-lang.org/">Introduction to Elm</a>: The official guide to the Elm 0.17 language and core packages.</li>
+</ul>
+
+<p>Others have written about the conversion as well:</p>
+
+<ul>
+  <li><a href="http://noredink.github.io/posts/signalsmigration.html">Migrating signal usage from Elm 0.16 to 0.17</a></li>
+</ul>
+
+<h3 id="why-does-elm-make-complain-cannot-find-module-basics">Why does elm-make complain “Cannot find module ‘Basics’”?</h3>
+
+<p>You need to install the elm-lang/core package.</p>
+
+<p>This often arises when upgrading a package from 0.16 after removing all dependencies from elm-package.json.</p>
+
+<h3 id="where-is-the-evanczelm-html-package">Where is the evancz/elm-html package?</h3>
+
+<p>It’s now at elm-lang/html. See the <a href="https://github.com/elm-lang/elm-platform/blob/master/upgrade-docs/0.17.md">upgrade guide</a> about this and other core packages that moved.</p>
+
+<h3 id="where-is-effectstask">Where is <code class="highlighter-rouge">Effects.task</code>?</h3>
+
+<p>It’s gone. <code class="highlighter-rouge">Task.perform</code> is used instead.</p>
+
+<h3 id="why-am-i-getting-typeerror-elmembed-is-not-a-function">Why am I getting “TypeError: Elm.embed is not a function”?</h3>
+
+<p>The JavaScript code for calling the Elm entry point must now look like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nx">Elm</span><span class="p">.</span><span class="nx">MyApp</span><span class="p">.</span><span class="nx">embed</span><span class="p">(</span><span class="nx">someElement</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>It used to look like <code class="highlighter-rouge">Elm.embed(Elm.MyApp, someElement)</code>.</p>
+
+<p>It’s similar for the <code class="highlighter-rouge">fullscreen</code> and <code class="highlighter-rouge">worker</code> functions.</p>
+
+<h3 id="what-happened-to-all-the-core-modules">What happened to all the core modules?</h3>
+
+<p>Many core modules have been moved out into separate packages, usually under <code class="highlighter-rouge">elm-lang</code>.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Graphics</code> is now in <code class="highlighter-rouge">evancz/elm-graphics</code></li>
+  <li><code class="highlighter-rouge">Trampoline</code> is now in <code class="highlighter-rouge">elm-lang/trampoline</code> and has some renames
+    <ul>
+      <li><code class="highlighter-rouge">Trampoline.trampoline</code> is now <code class="highlighter-rouge">Trampoline.evaluate</code></li>
+      <li><code class="highlighter-rouge">Trampoline.Done</code> is now <code class="highlighter-rouge">Trampoline.done</code> (function instead of type)</li>
+      <li><code class="highlighter-rouge">Trampoline.Continue</code> is now <code class="highlighter-rouge">Trampoline.continue</code> (function instead of type)</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">Mouse</code> is now in <code class="highlighter-rouge">elm-lang/Mouse</code></li>
+  <li><code class="highlighter-rouge">Window</code> is now in <code class="highlighter-rouge">elm-lang/Window</code></li>
+</ul>
+
+<h3 id="what-is-now-in-elm-community">What is now in elm-community?</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">NoRedInk/elm-lazy-list</code> is now <code class="highlighter-rouge">elm-community/elm-lazy-list</code></li>
+  <li><code class="highlighter-rouge">maxsnew/lazy</code> is now <code class="highlighter-rouge">elm-community/lazy</code></li>
+  <li><code class="highlighter-rouge">NoRedInk/elm-random-extra</code> is now <code class="highlighter-rouge">elm-community/elm-random-extra</code>
+    <ul>
+      <li><code class="highlighter-rouge">Random.Bool</code> has been removed as it is now in <code class="highlighter-rouge">elm-lang/core</code>’s <code class="highlighter-rouge">Random</code></li>
+      <li><code class="highlighter-rouge">Random.Function</code> has been removed entirely</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">deadfoxygrandpa/elm-test</code> is now <code class="highlighter-rouge">elm-community/elm-test</code>
+    <ul>
+      <li>It no longer needs <code class="highlighter-rouge">Console</code> to run under node, use <code class="highlighter-rouge">ElmTest.runSuite</code></li>
+      <li><code class="highlighter-rouge">elementRunner</code> is gone, use <code class="highlighter-rouge">runSuiteHtml</code> instead</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="where-are-the-cmd-and-sub-types-defined">Where are the <code class="highlighter-rouge">Cmd</code> and <code class="highlighter-rouge">Sub</code> types defined?</h3>
+
+<p>They are defined in the core
+<a href="http://package.elm-lang.org/packages/elm-lang/core/4.0.0/Platform-Cmd">Platform.Cmd</a>
+and
+<a href="http://package.elm-lang.org/packages/elm-lang/core/4.0.0/Platform-Sub">Platform.Sub</a>
+modules.</p>
+
+<h3 id="why-am-i-getting-cannot-find-module-errors-while-upgrading-a-project-from-016">Why am I getting “cannot find module” errors while upgrading a project from 0.16?</h3>
+
+<p>Cached or obsolete/renamed package versions may be getting in the way. To get a clean start, try these (from simplest to most drastic):</p>
+
+<ol>
+  <li>Remove all of elm-stuff.</li>
+  <li>Remove all the package names from the <code class="highlighter-rouge">dependencies</code> section of elm-package.json and install packages again as needed. You may have to explicitly install elm-lang/core again.</li>
+  <li>Remove all of ~/.elm (on linux or Mac OSX) or ~/AppData/Roaming/elm/package (on Windows).</li>
+</ol>
+
+<h3 id="what-is-this---construct-in-the-code">What is this <code class="highlighter-rouge">! []</code> construct in the code?</h3>
+
+<p>The <code class="highlighter-rouge">!</code> operator is defined as a convenience function in the <a href="http://package.elm-lang.org/packages/elm-lang/core/4.0.0/Platform-Cmd#!">Platform-Cmd</a> module.</p>
+
+<p>Called as <code class="highlighter-rouge">model ! listOfCmds</code> it returns the <code class="highlighter-rouge">(model, cmd)</code> value needed as the return value of an <code class="highlighter-rouge">update</code> function.</p>
+
+<h3 id="does-hot-reloading-work-in-elm-reactor-now">Does hot-reloading work in elm-reactor now?</h3>
+
+<p>Not yet. Work is well underway to improve elm-reactor.</p>
+
+<h3 id="what-is-the-difference-between-cmd-msg-and-cmd-msg">What is the difference between <code class="highlighter-rouge">Cmd Msg</code> and <code class="highlighter-rouge">Cmd msg</code>?</h3>
+
+<p><code class="highlighter-rouge">Cmd Msg</code> is a type of command where the resulting messages are of type <code class="highlighter-rouge">Msg</code>.</p>
+
+<p><code class="highlighter-rouge">Cmd msg</code> is a more general type of command where the resulting message type is not known. It could just as well be written as <code class="highlighter-rouge">Cmd a</code> or <code class="highlighter-rouge">Cmd x</code>.</p>
+
+<h3 id="why-does-the-compiler-complain-that-you-are-declaring-port-somename-in-a-normal-module">Why does the compiler complain that “You are declaring port `someName` in a normal module.”?</h3>
+
+<p>Any module using ports must start with <code class="highlighter-rouge">port module</code> on the first line.</p>
+
+<h3 id="why-does-the-compiler-complain-about-i-am-looking-for-one-of-the-following-things-whitespace-near-the-beginning-of-the-file">Why does the compiler complain about “I am looking for one of the following things: whitespace” near the beginning of the file?</h3>
+
+<p>The <code class="highlighter-rouge">exposing</code> clause is now required at the beginning of each module.
+For example, you now need <code class="highlighter-rouge">module Foo exposing (..)</code> where prior to Elm 0.17 you could use <code class="highlighter-rouge">module Foo where</code>.</p>
+
+<h3 id="how-do-i-generate-a-new-message-as-a-command">How do I generate a new message as a command?</h3>
+
+<p>This is not recommended to do; it’s an anti-pattern. The same effect can often be had by calling the update function recursively.</p>
+
+<p>If you still insist, you can send the <code class="highlighter-rouge">Test</code> message to yourself with this horror:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kt">Task</span><span class="o">.</span><span class="n">perform</span> <span class="p">(</span><span class="nf">\</span><span class="kr">_</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="kt">Debug</span><span class="o">.</span><span class="n">crash</span> <span class="s">"fail"</span><span class="p">))</span> <span class="p">(</span><span class="n">always</span> <span class="kt">Test</span><span class="p">)</span> <span class="p">(</span><span class="kt">Task</span><span class="o">.</span><span class="n">succeed</span> <span class="nb">()</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Alternatively, you can use fact that the failure case should not happen for <code class="highlighter-rouge">Task.succeed</code>, and also avoid the sometimes-deplored <code class="highlighter-rouge">always</code> function, like this:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kt">Task</span><span class="o">.</span><span class="n">perform</span> <span class="p">(</span><span class="nf">\</span><span class="kr">_</span> <span class="o">-&gt;</span> <span class="kt">Test</span><span class="p">)</span> <span class="p">(</span><span class="nf">\</span><span class="kr">_</span> <span class="o">-&gt;</span> <span class="kt">Test</span><span class="p">)</span> <span class="p">(</span><span class="kt">Task</span><span class="o">.</span><span class="n">succeed</span> <span class="nb">()</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="are-static-ports-still-available">Are static ports still available?</h3>
+
+<p>No. In Elm 0.17 you’ll have to pass any static data from JS to Elm via the “flags” argument to the <code class="highlighter-rouge">embed()</code>, <code class="highlighter-rouge">fullscreen()</code>, or <code class="highlighter-rouge">worker()</code> functions.</p>
+
+<h3 id="why-does-elm-make-report-i-cannot-find-module-graphicscollage-even-though-evanczelm-graphics-is-installed">Why does elm-make report “I cannot find module ‘Graphics.Collage’” even though evancz/elm-graphics is installed?</h3>
+
+<p>You now need to do <code class="highlighter-rouge">import Collage</code> to get that module. It’s no longer namespaced under <code class="highlighter-rouge">Graphics</code>.</p>
+
+<h3 id="what-is-the-difference-between-cmd-and-task">What is the difference between Cmd and Task?</h3>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">Cmd</code> is just a bag (i.e. multiset) of chunks of data. It is a functor, but it is not applicative or monadic. This means all you can do is apply a function to all the entries in the bag with <code class="highlighter-rouge">map</code> and add to the bag with <code class="highlighter-rouge">batch</code>.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">Task</code> is a way doing things in sequence. It is monadic, meaning it has an <code class="highlighter-rouge">andThen</code> in the API. This means you can say “Do X, and depending on the result, do Y or Z.” From there you can keep chaining things.</p>
+  </li>
+</ul>
+
+<p>The point of this bag of commands is that you can gather all the things that need to happen from your whole app and get them done. The point of a task is to describe a particular thing you want to happen.<sup id="fnref:cmd-vs-task"><a href="#fn:cmd-vs-task" class="footnote">1</a></sup></p>
+
+<p>If you need to do any kind of chaining stuff, use <code class="highlighter-rouge">Task</code>, and don’t turn your task chain into a <code class="highlighter-rouge">Cmd</code> until you have no more chaining stuff to do.
+This is why APIs generally expose <code class="highlighter-rouge">Task</code> instances rather than <code class="highlighter-rouge">Cmd</code>:  so you can do all the chaining you like, and you’re in charge of finishing the job and turning whatever chain you’ve constructed into a <code class="highlighter-rouge">Cmd</code>.<sup id="fnref:task-chaining"><a href="#fn:task-chaining" class="footnote">2</a></sup></p>
+
+<h2 id="footnotes">Footnotes</h2>
+<div class="footnotes">
+  <ol>
+    <li id="fn:cmd-vs-task">
+      <p>From Evan’s #elm-dev Slack posting, 2016-05-16. <a href="#fnref:cmd-vs-task" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:task-chaining">
+      <p>From rtfeldman’s #elm-dev Slack posting, 2016-05-16. <a href="#fnref:task-chaining" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Elm (language) FAQ</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>Elm (language) FAQ</li>
+          <li><a href="mailto:"></a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/elm-community">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">elm-community</span>
+            </a>
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Unofficial FAQ for the Elm language.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+<script src="elm.js"></script>
+<script>
+ var container = document.getElementById('elm-content');
+ Elm.Filter.embed(container);
+</script>
+
+  </body>
+
+</html>
