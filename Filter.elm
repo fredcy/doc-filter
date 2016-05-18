@@ -2,11 +2,12 @@ module Filter exposing (..)
 
 import Html
 import Html.App as Html
+import Html.Attributes as Html
 
 
-main : Program Never
+main : Program Flags
 main =
-    Html.program
+    Html.programWithFlags
         { init = init
         , update = update
         , view = view
@@ -14,8 +15,17 @@ main =
         }
 
 
+type alias Flags =
+    List SectionInfo
+
+
+type alias SectionInfo =
+    { id : String, text : String }
+
+
 type alias Model =
     { message : String
+    , sections : Flags
     }
 
 
@@ -23,9 +33,9 @@ type Msg
     = NoOp
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( { message = "Hello" }, Cmd.none )
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    ( { message = "Hello", sections = flags }, Cmd.none )
 
 
 update msg model =
@@ -33,5 +43,17 @@ update msg model =
 
 
 view model =
-  Html.div [] [ Html.text model.message ]
-      
+    Html.div []
+        [ sectionList model
+        ]
+
+
+sectionList model =
+    let
+        link id text =
+            Html.a [ Html.href ("#" ++ id) ] [ Html.text text ]
+
+        sectionListItem section =
+            Html.li [] [ link section.id section.text ]
+    in
+        Html.ul [ Html.class "section-list" ] (List.map sectionListItem model.sections)
