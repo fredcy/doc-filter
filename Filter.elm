@@ -1,6 +1,6 @@
 module Filter exposing (..)
 
-import Html
+import Html exposing (Html)
 import Html.App as Html
 import Html.Attributes as Html
 import Html.Events as Html
@@ -38,6 +38,7 @@ type alias Model =
 
 type Msg
     = UpdateFilter String
+    | ResetFilter
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -45,6 +46,7 @@ init flags =
     ( { message = "Hello", sections = flags, filter = Nothing }, Cmd.none )
 
 
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg |> Debug.log "msg" of
         UpdateFilter filterString ->
@@ -57,14 +59,20 @@ update msg model =
             in
                 { model | filter = filter } ! []
 
+        ResetFilter ->
+            { model | filter = Nothing } ! []
 
+
+view : Model -> Html Msg
 view model =
     Html.div []
         [ filterInput model
+        , resetButton model
         , sectionList model
         ]
 
 
+sectionList : Model -> Html Msg
 sectionList model =
     let
         link id text =
@@ -99,5 +107,20 @@ filterSections filter sections =
         List.filter matches sections
 
 
+filterInput : Model -> Html Msg
 filterInput model =
-    Html.input [ Html.onInput UpdateFilter, Html.class "filter" ] []
+    let
+        val =
+            model.filter |> Maybe.withDefault ""
+    in
+        Html.input [ Html.onInput UpdateFilter, Html.value val, Html.class "filter" ] []
+
+
+resetButton : Model -> Html Msg
+resetButton model =
+    case model.filter of
+        Just _ ->
+            Html.button [ Html.onClick ResetFilter, Html.class "reset-filter" ] [ Html.text "reset" ]
+
+        Nothing ->
+            Html.text ""
