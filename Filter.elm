@@ -4,7 +4,7 @@ import Html exposing (Html)
 import Html.App as Html
 import Html.Attributes as Html
 import Html.Events as Html
-import Regex
+import String
 
 
 main : Program Flags
@@ -26,7 +26,7 @@ type alias Filter =
 
 
 type alias Section =
-    { id : String, text : String, content : String }
+    { id : String, title : String, content : String }
 
 
 type alias Model =
@@ -79,7 +79,7 @@ sectionList model =
             Html.a [ Html.href ("#" ++ id) ] [ Html.text text ]
 
         sectionListItem section =
-            Html.li [] [ link section.id section.text ]
+            Html.li [] [ link section.id section.title ]
     in
         Html.ul [ Html.class "section-list" ]
             (filterSections model.filter model.sections
@@ -93,18 +93,24 @@ filterSections filter sections =
         matches section =
             case filter of
                 Just pattern ->
-                    let
-                        regex =
-                            Regex.regex pattern |> Regex.caseInsensitive
-                    in
-                        (Regex.contains regex section.text
-                            || Regex.contains regex section.content
-                        )
+                    match pattern section
 
                 Nothing ->
                     True
     in
         List.filter matches sections
+
+
+match : String -> Section -> Bool
+match pattern section =
+    if String.toLower pattern == pattern then
+        (String.contains pattern (String.toLower section.title)
+            || String.contains pattern (String.toLower section.content)
+        )
+    else
+        (String.contains pattern section.title
+            || String.contains pattern section.content
+        )
 
 
 filterInput : Model -> Html Msg
