@@ -119,7 +119,13 @@ filterInput model =
         val =
             model.filter |> Maybe.withDefault ""
     in
-        Html.input [ Html.onInput UpdateFilter, Html.value val, Html.class "filter" ] []
+        Html.input
+            [ Html.onInput UpdateFilter
+            , Html.value val
+            , Html.class "filter"
+            , Html.placeholder "search contents"
+            ]
+            []
 
 
 resetButton : Model -> Html Msg
