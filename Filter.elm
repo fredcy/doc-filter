@@ -103,14 +103,12 @@ filterSections filter sections =
 
 match : String -> Section -> Bool
 match pattern section =
-    if String.toLower pattern == pattern then
-        (String.contains pattern (String.toLower section.title)
-            || String.contains pattern (String.toLower section.content)
-        )
-    else
-        (String.contains pattern section.title
-            || String.contains pattern section.content
-        )
+    let
+        pattern' =
+            String.toLower pattern
+    in
+        String.contains pattern' (String.toLower section.title)
+            || String.contains pattern' (String.toLower section.content)
 
 
 filterInput : Model -> Html Msg
