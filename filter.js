@@ -13,11 +13,10 @@ var h3sInfo = h3sArr.map( function(elmt, index) {
     var content = "";
     for (var next = elmt.nextSibling; next; next = next.nextSibling) {
         if (next.tagName == "H3" || next.tagName == "H2" || next.tagName == "H1") {
-            break;
+	    break;
         }
         content += next.textContent;
     }
-    console.log(content);
     
     return { id: elmt.id, title: title, content: content };
 });
@@ -25,3 +24,15 @@ var h3sInfo = h3sArr.map( function(elmt, index) {
 
 Elm.Filter.embed(container, h3sInfo);
 
+// When following a link to the comprising page with a hash (HTML anchor
+// name) the browser often scrolls to the wrong offset in the document, as
+// if the content inserted by the Filter app above was not accounted
+// for. The following kluge works around that.
+
+if (window.location.hash) {
+    var save = window.location.hash;
+    window.location.hash = "#";
+    setTimeout(function() {
+	window.location.hash = save;
+    }, 1);
+}
