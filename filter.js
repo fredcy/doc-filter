@@ -31,8 +31,8 @@ Elm.Filter.embed(container, h3sInfo);
 
 if (window.location.hash) {
     var save = window.location.hash;
-    window.location.hash = "#";
+    window.location.hash = "";
     setTimeout(function() {
 	window.location.hash = save;
-    }, 1);
+    }, 0);
 }
